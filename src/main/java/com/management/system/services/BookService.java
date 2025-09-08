@@ -30,8 +30,7 @@ public class BookService {
 	}
 	
 	public ArrayList<BookModel> getBookByAvailable(Boolean valor){
-		// algo parecido a borrow y return? 
-		return bookRepository.findByAvailable(valor); // estructurar bien esta opcion, QUE RETORNE SOLO LOS LIBROS DISPONIBLES
+		return bookRepository.findByAvailable(valor); 
 	}
 	
 	public ArrayList<BookModel> getBookByTitle(String tittle){
@@ -49,7 +48,6 @@ public class BookService {
 		//actualizamos datos (esto se podra hacer mas rapido?)
 		book2.setAuthor(book.getAuthor());
 		book2.setAvailable(book.isAvailable());
-		book2.setId(book.getId());
 		book2.setIsbn(book.getIsbn());
 		book2.setPublishedYear(book.getPublishedYear());
 		book2.setTitle(book.getTitle());

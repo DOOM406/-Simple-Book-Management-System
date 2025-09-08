@@ -37,11 +37,11 @@ public class BookController {
 	}
 	
 	@GetMapping(path="/available")
-	public ArrayList<BookModel> getByAvailable(@PathVariable("available") Boolean available){
-		return bookService.getBookByAvailable(available); // estructurar bien esta opcion, QUE RETORNE SOLO LOS LIBROS DISPONIBLES
+	public ArrayList<BookModel> getByAvailable(){
+		return bookService.getBookByAvailable(true); // estructurar bien esta opcion, QUE RETORNE SOLO LOS LIBROS DISPONIBLES
 	}
 	
-	@GetMapping(path="/search?title={title}")
+	@GetMapping(path="/search")
 	public ArrayList<BookModel> getByTitle(@PathVariable("title") String title){
 		return bookService.getBookByTitle(title);
 	}
