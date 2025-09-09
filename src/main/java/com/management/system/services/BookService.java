@@ -1,6 +1,6 @@
 package com.management.system.services;
 
-import java.awt.print.Book;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -8,6 +8,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.management.system.BookException.BookAlreadyBorrowedException;
+import com.management.system.BookException.BookNotFoundException;
+import com.management.system.BookException.InvalidBookDataException;
 import com.management.system.models.BookModel;
 import com.management.system.repositories.BookRepository;
 
@@ -21,8 +24,9 @@ public class BookService {
 		return (ArrayList<BookModel>) bookRepository.findAll();
 	}
 	
-	public Optional<BookModel> getBookById(Long id){
-		return bookRepository.findById(id);
+	public BookModel getBookById(Long id){
+		return bookRepository.findById(id).
+				orElseThrow(() -> new BookNotFoundException("Book Not Found With id: "+id));
 	}
 	
 	public ArrayList<BookModel> getBookByAuthor(String author){
@@ -38,13 +42,23 @@ public class BookService {
 	}
 	
 	public BookModel saveBook(BookModel book) {
+		if(book.getTitle() == null || book.getTitle().trim().isEmpty()) {
+			throw new InvalidBookDataException("Book title cannot be empty");
+		}
+		
+		if(book.getAuthor() == null || book.getAuthor().trim().isEmpty()) {
+			throw new InvalidBookDataException("Book author cannot be empty");
+		}
+		
+		// se puse hacer con cada atributo 
+		
 		return bookRepository.save(book);
 	}
 	
 	public BookModel updateBook(Long id, BookModel book) {
 		//buscamos la entidad por la id
 		BookModel book2 = bookRepository.findById(id)
-				.orElseThrow(()-> new RuntimeException("Book not found, with id: "+id));
+				.orElseThrow(()-> new BookNotFoundException("Book not found, with id: "+id));
 		//actualizamos datos (esto se podra hacer mas rapido?)
 		book2.setAuthor(book.getAuthor());
 		book2.setAvailable(book.isAvailable());
@@ -64,14 +78,14 @@ public class BookService {
 		}
 	}
 	
-	public Optional<BookModel> borrowBook(Long id) {
-		return bookRepository.findById(id).map(book ->{
-			if(book.isAvailable()) { //si esta disponible
-				book.setAvailable(false); //lo marcamos como no disponible
-				return bookRepository.save(book); //actualizamos
-			}
-			return book; // ya esta prestado F
-		});
+	public BookModel borrowBook(Long id) {
+		BookModel book = bookRepository.findById(id)
+				.orElseThrow(() -> new BookNotFoundException("Book not found, with id: "+id));
+		if(!book.isAvailable()) {
+			throw new BookAlreadyBorrowedException("Book with id: "+id+" is already borrow");
+		}
+		book.setAvailable(false);
+		return bookRepository.save(book);
 	}
 	
 	public Optional<BookModel> returnBook(Long id) {

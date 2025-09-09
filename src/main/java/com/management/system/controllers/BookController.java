@@ -27,7 +27,7 @@ public class BookController {
 		return bookService.getAllbooks();
 	}
 	@GetMapping(path="/{id}")
-	public Optional<BookModel> getBookById(@PathVariable("id") Long id) {
+	public BookModel getBookById(@PathVariable("id") Long id) {
 		return bookService.getBookById(id);
 	}
 	
@@ -60,13 +60,8 @@ public class BookController {
 	}
 	
 	@PutMapping(path="/{id}/borrow")
-	public ResponseEntity<BookModel> borrowBook(@PathVariable("id")Long id){
-		 Optional<BookModel> updatedbook = bookService.borrowBook(id);
-		 if(updatedbook.isPresent()) {
-			 return ResponseEntity.ok(updatedbook.get());
-		 }else {
-			 return ResponseEntity.notFound().build();
-		 }
+	public BookModel borrowBook(@PathVariable("id")Long id){
+		return bookService.borrowBook(id);
 	}
 	@PutMapping(path="/{id}/return")
 	public ResponseEntity<BookModel> returnBook(@PathVariable("id")Long id){

@@ -14,9 +14,9 @@ public class BookModel {
 	private String title;//not null
 	@Column(nullable=false, length=100)
 	private String author;//not null
-	@Column(unique=true)
+	@Column(unique=true, length=13)
 	private String isbn; //unique
-	@Column()
+	@Column(nullable=false)
 	private Integer publishedYear;
 	@Column(nullable=false, columnDefinition = "BOOLEAN DEFAULT TRUE") 
 	private Boolean available=true;//default true
