@@ -1,8 +1,10 @@
 package com.management.system.controllers;
 
+import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import com.management.system.dto.DTOBookModel;
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +29,14 @@ public class BookController {
 		return bookService.getAllbooks();
 	}
 	@GetMapping(path="/{id}")
-	public BookModel getBookById(@PathVariable("id") Long id) {
-		return bookService.getBookById(id);
+	public DTOBookModel getBookById(@PathVariable("id") Long id) {
+        BookModel toConvert = bookService.getBookById(id);
+        return new DTOBookModel(toConvert.getTitle(),
+                toConvert.getAuthor(),
+                toConvert.getPublishedYear(),
+                toConvert.isAvailable());
 	}
-	
+	// y cambiar como la funcion de arriba los valores para que se muestren solo los datos que queremos ver
 	@GetMapping(path="/author/{author}")
 	public ArrayList<BookModel> getByAuthor(@PathVariable("author") String author){
 		return bookService.getBookByAuthor(author);

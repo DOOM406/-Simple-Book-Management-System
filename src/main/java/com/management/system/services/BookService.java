@@ -1,7 +1,6 @@
 package com.management.system.services;
 
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -19,7 +18,7 @@ public class BookService {
 	
 	@Autowired
 	BookRepository bookRepository;
-	
+
 	public ArrayList<BookModel> getAllbooks(){
 		return (ArrayList<BookModel>) bookRepository.findAll();
 	}
@@ -45,7 +44,7 @@ public class BookService {
 		if(book.getTitle() == null || book.getTitle().trim().isEmpty()) {
 			throw new InvalidBookDataException("Book title cannot be empty");
 		}
-		
+
 		if(book.getAuthor() == null || book.getAuthor().trim().isEmpty()) {
 			throw new InvalidBookDataException("Book author cannot be empty");
 		}
